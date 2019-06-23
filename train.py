@@ -17,10 +17,10 @@ import torchvision.transforms as transforms
 
 from torch.utils.data import DataLoader
 
-import torchbiomed.datasets as dset
-import torchbiomed.transforms as biotransforms
-import torchbiomed.loss as bioloss
-import torchbiomed.utils as utils
+import utils.torchbiomed.datasets as dset
+import utils.torchbiomed.transforms as biotransforms
+import utils.torchbiomed.loss as bioloss
+import utils.torchbiomed.utils as utils
 
 import os
 import sys

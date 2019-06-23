@@ -183,5 +183,5 @@ class VNet(nn.Module):
 
 
 if __name__ == '__main__':
-    mod = VNet()
-    summary(mod, (1, 96, 96, 96), batch_size=1)
+    mod = VNet().cpu()
+    summary(mod, (1, 96, 96, 96), batch_size=1, device='cpu')

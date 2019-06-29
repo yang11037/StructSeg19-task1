@@ -46,8 +46,10 @@ def ImageResample(sitk_image, new_spacing=[1., 1., 1.], is_label = False):
 
 
 def test_load():
-    img_path = r"/Users/qinyang.lu/PycharmProjects/4Fun/data.nii.gz"
-    label_path = r"/Users/qinyang.lu/PycharmProjects/4Fun/label.nii.gz"
+    #img_path = r"/Users/qinyang.lu/PycharmProjects/4Fun/data.nii.gz"
+    #label_path = r"/Users/qinyang.lu/PycharmProjects/4Fun/label.nii.gz"
+    img_path = r"D:\git\data\StructSeg 2019\Task1_HaN_OAR\HaN_OAR\1\data.nii.gz"
+    label_path = r"D:\git\data\StructSeg 2019\Task1_HaN_OAR\HaN_OAR\1\label.nii.gz"
     ds_im = sitk.ReadImage(img_path)
     ds_label = sitk.ReadImage(label_path)
 
@@ -78,6 +80,7 @@ def test_load():
 
     sub_volume_im = trainTransform(sub_volume_im)
     sub_volume_im = torch.reshape(sub_volume_im, (1, 1, 96, 96, 96))
+    sub_volume_im = sub_volume_im.type(torch.FloatTensor)
 
     model = vnet.VNet(classes=2).cpu()
     output = model(sub_volume_im)

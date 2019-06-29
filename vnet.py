@@ -132,12 +132,12 @@ class OutputTransition(nn.Module):
         # make channels the last axis
         out = out.permute(0, 2, 3, 4, 1).contiguous()
         # flatten
-        batch_size = 2
+        batch_size = 1
         out = out.view(batch_size, 2, out[0].numel() // 2)
         for index in range(batch_size):
             out[index] = self.softmax(out[index], dim=0)
         # treat channel 0 as the predicted output
-        out = out.reshape(2, 2, 96, 96, 96)
+        out = out.reshape(1, 2, 96, 96, 96)
         return out
 
 

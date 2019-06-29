@@ -114,12 +114,14 @@ class UpTransition(nn.Module):
 
 
 class OutputTransition(nn.Module):
-    def __init__(self, inChans, classes, elu, nll):
+    def __init__(self, inChans, classes, batch_size, elu, nll):
         super(OutputTransition, self).__init__()
         self.conv1 = nn.Conv3d(inChans, classes, kernel_size=3, padding=1)
         self.bn1 = ContBatchNorm3d(classes)
         self.conv2 = nn.Conv3d(classes, classes, kernel_size=1)
         self.relu1 = ELUCons(elu, classes)
+        self.classes = classes
+        self.bs = batch_size
         if nll:
             self.softmax = F.log_softmax
         else:
@@ -132,19 +134,18 @@ class OutputTransition(nn.Module):
         # make channels the last axis
         out = out.permute(0, 2, 3, 4, 1).contiguous()
         # flatten
-        batch_size = 1
-        out = out.view(batch_size, 2, out[0].numel() // 2)
-        for index in range(batch_size):
+        out = out.view(self.bs, self.classes, out[0].numel() // self.classes)
+        for index in range(self.bs):
             out[index] = self.softmax(out[index], dim=0)
         # treat channel 0 as the predicted output
-        out = out.reshape(1, 2, 96, 96, 96)
+        # out = out.reshape(self.bs, self.classes, 96, 96, 96)
         return out
 
 
 class VNet(nn.Module):
     # the number of convolutions in each layer corresponds
     # to what is in the actual prototxt, not the intent
-    def __init__(self, classes, elu=True, nll=False):
+    def __init__(self, classes, batch_size, elu=True, nll=False):
         super(VNet, self).__init__()
         self.in_tr = InputTransition(16, elu)
         self.down_tr32 = DownTransition(16, elu)
@@ -155,7 +156,8 @@ class VNet(nn.Module):
         self.up_tr128 = UpTransition(256, 128, elu, dropout=True)
         self.up_tr64 = UpTransition(128, 64, elu)
         self.up_tr32 = UpTransition(64, 32, elu)
-        self.out_tr = OutputTransition(32, classes, elu, nll)
+        self.out_tr = OutputTransition(32, classes, batch_size, elu, nll)
+        self.bs = batch_size
 
     # The network topology as described in the diagram
     # in the VNet paper
@@ -188,5 +190,5 @@ class VNet(nn.Module):
 
 
 if __name__ == '__main__':
-    mod = VNet(classes=2).cpu()
+    mod = VNet(classes=2, batch_size=1).cpu()
     summary(mod, (1, 96, 96, 96), batch_size=1, device='cpu')

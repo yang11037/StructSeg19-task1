@@ -5,6 +5,7 @@ import os
 
 import SimpleITK as sitk
 import numpy as np
+import pandas as pd
 
 import torch
 import torchvision.transforms as transforms
@@ -46,10 +47,10 @@ def ImageResample(sitk_image, new_spacing=[1., 1., 1.], is_label = False):
 
 
 def test_load():
-    #img_path = r"/Users/qinyang.lu/PycharmProjects/4Fun/data.nii.gz"
-    #label_path = r"/Users/qinyang.lu/PycharmProjects/4Fun/label.nii.gz"
-    img_path = r"D:\git\data\StructSeg 2019\Task1_HaN_OAR\HaN_OAR\1\data.nii.gz"
-    label_path = r"D:\git\data\StructSeg 2019\Task1_HaN_OAR\HaN_OAR\1\label.nii.gz"
+    img_path = r"/Users/qinyang.lu/PycharmProjects/4Fun/data.nii.gz"
+    label_path = r"/Users/qinyang.lu/PycharmProjects/4Fun/label.nii.gz"
+    # img_path = r"D:\git\data\StructSeg 2019\Task1_HaN_OAR\HaN_OAR\1\data.nii.gz"
+    # label_path = r"D:\git\data\StructSeg 2019\Task1_HaN_OAR\HaN_OAR\1\label.nii.gz"
     ds_im = sitk.ReadImage(img_path)
     ds_label = sitk.ReadImage(label_path)
 
@@ -72,6 +73,10 @@ def test_load():
 
     sub_volume_im = img_array[0:96, 0:96, 0:96]
     sub_volume_label = label_array[0:96, 0:96, 0:96]
+    sub_volume_im = np.transpose(sub_volume_im, (2, 0, 1))
+    sub_volume_label = np.transpose(sub_volume_label, (2, 0, 1))
+    sub_volume_label = np.reshape(sub_volume_label, -1)
+    one_hot = np.eye(23)[sub_volume_label].T
 
 
     trainTransform = transforms.Compose([
@@ -82,7 +87,11 @@ def test_load():
     sub_volume_im = torch.reshape(sub_volume_im, (1, 1, 96, 96, 96))
     sub_volume_im = sub_volume_im.type(torch.FloatTensor)
 
-    model = vnet.VNet(classes=2).cpu()
+    sub_volume_label = trainTransform(one_hot)
+    sub_volume_label = torch.reshape(sub_volume_label, (1, 23, -1))
+    sub_volume_label = sub_volume_label.type(torch.FloatTensor)
+
+    model = vnet.VNet(classes=23, batch_size=1).cpu()
     output = model(sub_volume_im)
     print(output.shape)
 

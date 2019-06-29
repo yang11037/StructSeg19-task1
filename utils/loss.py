@@ -4,7 +4,7 @@ import torch.nn as nn
 
 class DiceLoss(nn.Module):
     def __init__(self):
-        super(DiceLoss, self).__init__()
+        pass
 
     def forward(self, pred, target):
         """

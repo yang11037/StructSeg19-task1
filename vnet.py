@@ -135,8 +135,8 @@ class OutputTransition(nn.Module):
         out = out.permute(0, 2, 3, 4, 1).contiguous()
         # flatten
         out = out.view(self.bs, self.classes, out[0].numel() // self.classes)
-        for index in range(self.bs):
-            out[index] = self.softmax(out[index], dim=0)
+        #for index in range(self.bs):
+        #    out[index] = self.softmax(out[index], dim=0)
         # treat channel 0 as the predicted output
         # out = out.reshape(self.bs, self.classes, 96, 96, 96)
         return out

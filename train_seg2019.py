@@ -3,7 +3,8 @@
 import argparse
 
 from Dataset import CtDataset
-from utils.loss import DiceLoss
+#from utils.loss import DiceLoss
+from utils.diceloss import DiceLoss
 import vnet
 
 import torch
@@ -46,7 +47,7 @@ def main():
         model.train()
         for batch_idx, (img, target) in enumerate(trainLoader):
             target = torch.reshape(target, (1, 23, -1))
-            img, target = Variable(img), Variable(target)
+            #img, target = Variable(img), Variable(target)
             optimizer.zero_grad()
             output = model(img)
             loss = DiceLoss()(output, target)
@@ -57,6 +58,7 @@ def main():
 
 
 if __name__ == '__main__':
+    torch.autograd.set_detect_anomaly(True)
     main()
 
 

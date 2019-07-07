@@ -132,9 +132,10 @@ class OutputTransition(nn.Module):
         out = self.relu1(self.bn1(self.conv1(x)))
         out = self.conv2(out)
         # make channels the last axis
-        out = out.permute(0, 2, 3, 4, 1).contiguous()
+        # out = out.permute(0, 2, 3, 4, 1).contiguous()
         # flatten
         out = out.view(self.bs, self.classes, out[0].numel() // self.classes)
+        out = self.softmax(out, dim=1)
         #for index in range(self.bs):
         #    out[index] = self.softmax(out[index], dim=0)
         # treat channel 0 as the predicted output

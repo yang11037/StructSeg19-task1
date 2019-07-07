@@ -90,16 +90,10 @@ class CtDataset(data.Dataset):
 
         #TODO: 归一化时，是不是应该原来大于0的现在也大于0
         # normal to [-1, 1]
-        for depth in range(sub_volume_im.shape[0]):
-            for width in range(sub_volume_im.shape[1]):
-                for height in range(sub_volume_im.shape[2]):
-                    if sub_volume_im[depth, width, height] < imin:
-                        sub_volume_im[depth, width, height] = -1
-                    elif sub_volume_im[depth, width, height] < imax:
-                        sub_volume_im[depth, width, height] = \
-                            2 * (sub_volume_im[depth, width, height] - imin) / self.winw - 1
-                    else:
-                        sub_volume_im[depth, width, height] = 1
+
+        sub_volume_im = 2 * (sub_volume_im - imin) / self.winw - 1
+
+
 
         # sub_volume_im = np.transpose(sub_volume_im, (2, 0, 1))  # depth,height,width in Conv3D
 
@@ -266,7 +260,7 @@ def test_load():
 
 if __name__ == '__main__':
     trainSet = CtDataset("./data/test", 23, "train", [96, 96, 96], [3, 3, 3], 350, 50)
-    trainLoader = data.DataLoader(trainSet, batch_size=1, shuffle=False)
+    trainLoader = data.DataLoader(trainSet, batch_size=2, shuffle=False)
     dataiter = iter(trainLoader)
     img, mask = dataiter.next()
     print(mask.shape)

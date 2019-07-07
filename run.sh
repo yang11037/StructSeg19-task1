@@ -2,10 +2,11 @@
 #SBATCH -J segmentation
 #SBATCH -p gpu
 #SBATCH -N 1
-#SBATCH --output=out_%j.log
-#SBATCH --error=err_%j.log
+#SBATCH --output=out.log
+#SBATCH --error=err.log
 #SBATCH -t 100:00:00
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:4
 module load anaconda3/5.3.0
-python train_seg2019.py --train-root HaN_OAR --save models/ --batchSz 2 --ngpu 1
+source activate mm
+python train_seg2019.py --train-root ../data/HaN_OAR --save ../mode_saved --batchSz 4 --ngpu 4
 

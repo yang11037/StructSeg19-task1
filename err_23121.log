@@ -1,0 +1,22 @@
+train_seg2019.py:158: UserWarning: nn.init.kaiming_normal is now deprecated in favor of nn.init.kaiming_normal_.
+  nn.init.kaiming_normal(m.weight)
+Traceback (most recent call last):
+  File "train_seg2019.py", line 165, in <module>
+    main()
+  File "train_seg2019.py", line 112, in main
+    train_loss = train(args, epoch, model, trainLoader, optimizer, batch_size)
+  File "train_seg2019.py", line 134, in train
+    output = model(img)
+  File "/cluster/home/it_stu3/.conda/envs/mm/lib/python3.6/site-packages/torch/nn/modules/module.py", line 493, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/cluster/home/it_stu3/.conda/envs/mm/lib/python3.6/site-packages/torch/nn/parallel/data_parallel.py", line 150, in forward
+    return self.module(*inputs[0], **kwargs[0])
+  File "/cluster/home/it_stu3/.conda/envs/mm/lib/python3.6/site-packages/torch/nn/modules/module.py", line 493, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/cluster/home/it_stu3/jackstark/StructSeg19-task1/vnet.py", line 187, in forward
+    out = self.up_tr64(out, out32)
+  File "/cluster/home/it_stu3/.conda/envs/mm/lib/python3.6/site-packages/torch/nn/modules/module.py", line 493, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/cluster/home/it_stu3/jackstark/StructSeg19-task1/vnet.py", line 110, in forward
+    xcat = torch.cat((out, skipxdo), 1)
+RuntimeError: invalid argument 0: Sizes of tensors must match except in dimension 1. Got 57 and 56 in dimension 2 at /opt/conda/conda-bld/pytorch_1556653183467/work/aten/src/THC/generic/THCTensorMath.cu:71

@@ -1,0 +1,12 @@
+Namespace(batchSz=1, dice=False, evaluate=False, inference='', lr=0.1, nEpochs=300, ngpu=1, no_cuda=False, opt='adam', patch=114, resume='', save='../mode_saved', seed=1, start_epoch=0, train_root='../data/HaN_OAR', weight_decay=1e-08)
+build vnet
+  + Number of params: 1190589
+cuda done
+loading training set
+Epoch 1:
+10
+61
+47
+17
+36
+46

@@ -1,2 +1,3 @@
 train_seg2019.py:150: UserWarning: nn.init.kaiming_normal is now deprecated in favor of nn.init.kaiming_normal_.
   nn.init.kaiming_normal(m.weight)
+slurmstepd: error: *** JOB 23117 ON node12 CANCELLED AT 2019-07-08T02:38:52 ***

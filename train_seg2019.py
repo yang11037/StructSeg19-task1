@@ -91,9 +91,9 @@ def main():
 
     kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
     print("loading training set")
-    trainSet = CtDataset(args.train_root, classes=23, mode="train", patch_size=[96, 96, 96],\
+    trainSet = CtDataset(args.train_root, classes=23, mode="train", patch_size=[114, 114, 114],\
                          new_space=[3, 3, 3], winw=350, winl=50)
-    trainLoader = data.DataLoader(trainSet, batch_size=batch_size, shuffle=False, **kwargs)
+    trainLoader = data.DataLoader(trainSet, batch_size=batch_size, shuffle=True, **kwargs)
     if args.opt == 'sgd':
         optimizer = optim.SGD(model.parameters(), lr=args.lr,
                               momentum=0.99, weight_decay=weight_decay)

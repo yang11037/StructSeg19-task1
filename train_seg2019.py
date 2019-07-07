@@ -102,7 +102,8 @@ def main():
         optimizer = optim.RMSprop(model.parameters(), weight_decay=weight_decay)
     best_loss = 1
     for epoch in range(1, args.nEpochs + 1):
-        train_loss = train(args, epoch, model, trainLoader, optimizer)
+        print("Epoch {}:".format(epoch))
+        train_loss = train(args, epoch, model, trainLoader, optimizer, batch_size)
         is_best = False
         if train_loss < best_loss:
             is_best = True
@@ -113,18 +114,20 @@ def main():
                        is_best, args.save, "vnet_coarse")
 
 
-def train(args, epoch, model, trainLoader, optimizer):
+def train(args, epoch, model, trainLoader, optimizer, batch_size):
     model.train()
     loss = 0
     for batch_idx, (img, target) in enumerate(trainLoader):
-        target = torch.reshape(target, (1, 23, -1))
+        if args.cuda:
+            img, target = img.cuda(), target.cuda()
+        target = torch.reshape(target, (batch_size, 23, -1))
         # img, target = Variable(img), Variable(target)
         optimizer.zero_grad()
         output = model(img)
         loss = DiceLoss()(output, target)
         loss.backward()
         optimizer.step()
-        print("Epoch {}, batchidx {}, loss: {}".format(epoch, batch_idx, loss))
+    print("loss: {}".format(loss))
     return loss
 
 

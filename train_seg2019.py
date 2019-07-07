@@ -49,6 +49,7 @@ def main():
     parser.add_argument('--opt', type=str, default='adam',
                         choices=('sgd', 'adam', 'rmsprop'))
     args = parser.parse_args()
+    print(args)
     args.cuda = not args.no_cuda and torch.cuda.is_available()
     args.save = args.save or 'work/vnet.base.{}'.format(datestr())
     weight_decay = args.weight_decay

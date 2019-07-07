@@ -19,7 +19,6 @@ from torch.autograd import Variable
 
 import setproctitle
 
-lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[20, 50, 90, 150, 200])
 
 def main():
     parser = argparse.ArgumentParser()
@@ -123,6 +122,7 @@ def main():
 
 def train(args, epoch, model, trainLoader, optimizer, batch_size):
     model.train()
+    lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[20, 50, 90, 150, 200])
     loss = 0
     lr_scheduler.step(epoch)
     for batch_idx, (img, target) in enumerate(trainLoader):

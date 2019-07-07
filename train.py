@@ -231,12 +231,14 @@ def main():
         class_weights = class_weights.cuda()
 
     if args.opt == 'sgd':
-        optimizer = optim.SGD(model.parameters(), lr=1e-1,
-                              momentum=0.99, weight_decay=weight_decay)
+        optimizer = optim.SGD(model.parameters(), lr=1e-2,
+                              momentum=0.9, weight_decay=weight_decay)
     elif args.opt == 'adam':
-        optimizer = optim.Adam(model.parameters(), weight_decay=weight_decay)
+        optimizer = optim.Adam(model.parameters(), lr=1e-2, 
+                               weight_decay=weight_decay)
     elif args.opt == 'rmsprop':
-        optimizer = optim.RMSprop(model.parameters(), weight_decay=weight_decay)
+        optimizer = optim.RMSprop(model.parameters(), lr=1e-2,
+                                  weight_decay=weight_decay)
 
     trainF = open(os.path.join(args.save, 'train.csv'), 'w')
     testF = open(os.path.join(args.save, 'test.csv'), 'w')

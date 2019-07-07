@@ -8,5 +8,5 @@
 #SBATCH --gres=gpu:4
 module load anaconda3/5.3.0
 source activate mm
-python train_seg2019.py --train-root ../data/HaN_OAR --save ../mode_saved --batchSz 4 --ngpu 4
+python train_seg2019.py --train-root ../data/HaN_OAR --save ../mode_saved --batchSz 1 --ngpu 1
 

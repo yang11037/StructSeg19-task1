@@ -19,10 +19,12 @@ from torch.autograd import Variable
 
 import setproctitle
 
+lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[20, 50, 90, 150, 200])
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--batchSz', type=int, default=10)
+    parser.add_argument('--patch', type=int, default=114)
     parser.add_argument('--train-root', type=str)
     parser.add_argument('--dice', action='store_true')
     parser.add_argument('--ngpu', type=int, default=1)
@@ -41,7 +43,7 @@ def main():
     parser.add_argument('--weight-decay', '--wd', default=1e-8, type=float,
                         metavar='W', help='weight decay (default: 1e-8)')
     parser.add_argument('--no-cuda', action='store_true')
-    parser.add_argument('--lr', default=1e-2, type=float)
+    parser.add_argument('--lr', default=1e-1, type=float)
     parser.add_argument('--save')
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--opt', type=str, default='adam',
@@ -55,6 +57,7 @@ def main():
         exit()
 
     setproctitle.setproctitle(args.save)
+
     torch.manual_seed(args.seed)
     if args.cuda:
         torch.cuda.manual_seed(args.seed)
@@ -91,7 +94,7 @@ def main():
 
     kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
     print("loading training set")
-    trainSet = CtDataset(args.train_root, classes=23, mode="train", patch_size=[114, 114, 114],\
+    trainSet = CtDataset(args.train_root, classes=23, mode="train", patch_size=[args.patch, args.patch, args.patch],
                          new_space=[3, 3, 3], winw=350, winl=50)
     trainLoader = data.DataLoader(trainSet, batch_size=batch_size, shuffle=True, **kwargs)
     if args.opt == 'sgd':
@@ -120,6 +123,7 @@ def main():
 def train(args, epoch, model, trainLoader, optimizer, batch_size):
     model.train()
     loss = 0
+    lr_scheduler.step(epoch)
     for batch_idx, (img, target) in enumerate(trainLoader):
         if args.cuda:
             img, target = img.cuda(), target.cuda()

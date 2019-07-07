@@ -41,6 +41,7 @@ def main():
     parser.add_argument('--weight-decay', '--wd', default=1e-8, type=float,
                         metavar='W', help='weight decay (default: 1e-8)')
     parser.add_argument('--no-cuda', action='store_true')
+    parser.add_argument('--lr', default=1e-2, type=float)
     parser.add_argument('--save')
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--opt', type=str, default='adam',
@@ -94,12 +95,14 @@ def main():
                          new_space=[3, 3, 3], winw=350, winl=50)
     trainLoader = data.DataLoader(trainSet, batch_size=batch_size, shuffle=False, **kwargs)
     if args.opt == 'sgd':
-        optimizer = optim.SGD(model.parameters(), lr=1e-1,
+        optimizer = optim.SGD(model.parameters(), lr=args.lr,
                               momentum=0.99, weight_decay=weight_decay)
     elif args.opt == 'adam':
-        optimizer = optim.Adam(model.parameters(), weight_decay=weight_decay)
+        optimizer = optim.Adam(model.parameters(), lr=args.lr,
+                               weight_decay=weight_decay)
     elif args.opt == 'rmsprop':
-        optimizer = optim.RMSprop(model.parameters(), weight_decay=weight_decay)
+        optimizer = optim.RMSprop(model.parameters(), lr=args.lr,
+                                  weight_decay=weight_decay)
     best_loss = 1
     for epoch in range(1, args.nEpochs + 1):
         print("Epoch {}:".format(epoch))

@@ -4,3 +4,4 @@ torchvision
 setproctitle
 graphviz
 SimpleITK
+torchsummary

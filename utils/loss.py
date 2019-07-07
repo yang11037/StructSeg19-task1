@@ -13,7 +13,7 @@ class DiceLoss(nn.Module):
         :param target:（Batch, Classes, pixel）
         :return: the mean loss of this batch
         """
-        return -dice_coef(pred, target)
+        return 1 - dice_coef(pred, target)
 
 
 def dice_coef(pred, target):
@@ -25,7 +25,7 @@ def dice_coef(pred, target):
             intersection = torch.dot(pred[batch_i, c, :], target[batch_i, c, :])
 
             loss = 2 * (intersection + smooth) \
-                   / (pred.sum(1) + target.sum(1) + smooth)
+                   / (pred.sum() + target.sum() + smooth)
             total_loss += loss
         total_loss = total_loss / C
     total_loss = total_loss / N

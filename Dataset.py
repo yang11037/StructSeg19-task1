@@ -269,6 +269,8 @@ if __name__ == '__main__':
     trainLoader = data.DataLoader(trainSet, batch_size=1, shuffle=False)
     dataiter = iter(trainLoader)
     img, mask = dataiter.next()
+    print(mask.shape)
+    exit()
     _, axs = plt.subplots(2, 1)
     axs[0].imshow(img[0, 0, 0, :, :], cmap='gray')
     axs[1].imshow(mask[0, 20, 0, :, :], cmap='gray')
